@@ -177,4 +177,140 @@ string: //https://docs.python.org/3/library/stdtypes.html#string-methods
             a.translate(b) -> "1234"
     upper()  //将字符串中的小写字母都转化为大写
     zfill(width)  //指定字符串占的位宽，1.如果指定的width小于字符串的字符数，则没啥变化; 2.如果指定的width大于字符串的字符数，则返回的字符串中，多余的位宽字符使用数字0进行填充; *.特别要注意的是如果字符串有+或-号前缀，则补的0位于符号后，如"-42".zfill(5)  -> "-0042"
-    
+----------
+处理时间的方法: //https://www.cnblogs.com/lianrenjujishou/p/5456321.html
+datetime模块
+ datetime类
+    属性: 年，月，日，时，分，秒，微秒，tzinfo  // help(datetime.datetime)
+    实例化: datetime.datetime(year,month,day,hour,minute,second,microsecond,tzinfo)
+    实例方法: today()
+              now(tz=None)
+ date类:  //博客中的例子基本上将方法的用法都提到了
+    属性: 年，月，日
+    实例化: datetime.date(year, month, day)
+    实例方法:today(),
+             fromtimestamp(timestamp)   //time.time()返回的就是时间戳可作为函数参数
+             fromordinal(ordinal) //该函数参数是从1年1月1日起的天数，函数结果是一个年月日的日期，也就是说根据总天数算日期的这么一个函数
+             replace(year,month,day) //这个简单，修改年月日属性
+             timetuple()  //返回一个实例，实例中的属性很全，包含年，月，日，时，分，秒，星期几，当年第几天，是否是夏令时这九个属性
+             toordinal()  //这个是使用date调用得到从1年1月1日到该日期的天数，正好与fromordinal(ordinal)函数相反
+             weekday() //使用数字返回星期几，0-6
+             isoweekday() //使用数字返回星期几, 1-7
+             isocalendar() //返回一个三元组，iso年，iso一年中第几个星期，iso星期几
+             isoformat()  //将实例化的日期格式化为可读的字符串  // '2002-12-04'
+             __str__()  //参见isoformat()
+             ctime() // 返回一个字符串 "Thu May 9 13:39:24 2019"
+             strftime(format) //这个就是对日期的一个格式化，参数有很多
+
+ time类
+    属性: 小时，分钟， 秒，微秒，tzinfo  // help(datetime.time) ; 它的isoformat()与strftime()这两个函数应该常用
+ timedelta类
+    *.使用微秒来表示两个date,time或是datetime实例的间隔
+    实例化:datetime.timedelta(weeks,days,hours,minutes,seconds,milliseconds,microseconds) //实例化后，系统只存储 days, hours, microseconds,实际给出的那么多单位都会向这三个单位进行转换
+    实例属性: days, hours, microseconds
+    实例方法: total_seconds()
+ tzinfo类
+ timezone类
+    实例化: datetime.timezone(offset[, name])
+    实例方法: utcoffset(dt)
+              tzname(dt)
+              dst(dt)
+              fromutc(dt)
+ strftime()和strptime()
+----------------
+文件读写
+ 读:
+     f = open('file_name'[, encoding="utf8"], mode='r[b]')
+     f.readline() | f.readlines() | for i in f
+ 写:
+     f = open('file_name'[,encoding="utf8"] ,mode='w[b]')
+     f.write()
+     f.write()
+ *.当mode中有'b'时，不能指定encoding参数
+----------------
+多线程 之 threading模块:
+  利用threading模块创建多线程的两种方式:
+       1.向Thread类传递一个可调用的参数
+       2.新建Thread类的子类，然后重写父类的__init__()方法与run()方法 //我记得子类实例化的时候应该会自动先对父类初始化吧，为什么要手动的在子类中实现父类的__init__()方法呢?
+  threading模块的top-level方法:
+      active_count()  //返回的是当前存活线程的个数，即返回值是个数字，这个数字还等价于enumerate()函数返回的列表长度,即"active_count() == len(enumerate())"
+      current_thread() //返回的是当前调用该函数的线程，这个线程名称可以在enumerate()函数返回的列表中找到
+      get_ident()  //返回的是调用该函数线程的标识符，该标识符是个数字，数字本身并没有什么意义，通常用作magic cookie,例如可以利用该数字来索引一个字典中指定线程的数据; 还有一点该标识符数字可以被重复使用，即如果该线程结束掉，后面新的线程可以被分配相同的标识符数字
+      enumerate()  //返回一个总的线程列表，包括，主线程，daemonic线程，由current_thread()创建的伪线程
+      main_thread()  //这个通常是启动python解释器的那个线程
+     *settrace(func)    //这三个先放一放
+     *setprofile(func)  //
+     *stack_size([size]) //
+  threading模块的top-level属性:
+      TIMEOUT_MAX  //它返回一个数值，实际用法就是作为参考值，函数中设置的超时时间不能超过该返回值，否则会抛异常
+  threading模块中如何实现线程私有数据:
+      *.因为线程是共享进程空间的，所以默认情况下所有线程访问的数据都是一样的，所以在新建线程中新建threading.local()对象，然后使用相应实例下义的属性只属于该线程私有    // mydata = threading.local()    mydata.x = 1
+  threading模块新建线程利用的是其中的Thread类:
+      Thread类构造器参数: group, target, name, args, kwargs, daemon
+      实例方法和属性:
+          start()  //它最常用，作用是在新的控制线程中执行run()方法,当前的理解是:也就是说所有的业务代码应该都放在run()函数中; 另外一个线程只能调用一次start()方法，如果多次调用会抛RuntimeError异常
+	  run()  //看意思是run()函数运行的时候，执行的是Thread类实例化时指定的类参数target的值，该值猜测应该通常是个函数；然后还会读取Thread类实例化时指定的类参数args以及kwargs对target函数进行传参
+	  join(timeout=None)  //执行方方法的线程会被阻塞，直到相应线程被终止或是timeout超时
+	  name
+	  getName()
+	  setName()
+	  ident()
+	  is_alive()
+	  daemon
+	  isDaemon()
+	  setDaemon()
+    剩下的内容就是threading模块中为了解决synchronization而设计的一系列锁:
+        Lock类:
+	RLock类:
+        Condition(lock=None)类:
+	Semaphore类:
+	Event类:
+	Timer类:
+	Barrier类:
+    新建线程的例子:
+        a.不用子类继承，直接利用run()函数的特性: 默认情况下run()方法会执行Thread()类初始化时给定的target参数值(一般是函数名)，如果target指定的函数有参数的话，可以通过Thread类的args参数和kwargs参数进行传参，这两个参数的默认值一个是(),一个是{}.也就是说在Thread类实例化时指定了上面三个参数后，直接调用start()方法即可在新建的线程中执行target指定的函数:
+	def test(x,y):
+	    print("%d"%(x+y))
+	t = threading.Thread(target=test, args=(5, 6))
+	t.start()
+	*.可以在test函数中加上一句print(threading.current_thread())就可以看到执行线程名并不是main线程，而是新建线程
+	b.使用子类继承Thread类的方式，此时需要注意的问题是: "子类继承父类时，在对子类实例化的时候，并不会默认执行父类的__init__()函数，而有些时候父类的部分操作依赖于父类中的__init__()函数进行一些初始化操作，如果没有这些初始化操作，子类在调用父类的某些函数时可能会出问题"; 还有一个问题: "使用子类时，如果在子类中找不到的内容会在其先辈中一级一级的找，直到找到为止，有一个关键点是:类在实例化的时候会调用__init__()方法". 接下来引入b这个方法:
+	    1.如果在子类中没有定义__init__()函数的情况下, 我们可以直接重写run方法，则此时多线程运行的就是override后的这个run()方法中的语句; 要说的重点是因为子类中没有定义__init__()方法，所以在子类实例化时，因为在子类中找不到__init__()方法，它就会去父类中找，从而将Thread类的__init__()方法执行了，继而子类中再引用父类中的其它方法时都不会有问题;
+	        def test(x,y):
+		    print("%d"%(x+y))
+		class a(Thread):
+		    def run(self):
+		        print("I am ok")
+	        new = a()
+		a.start()   //此时执行自定义run()方法下的print()函数，而Thread类中run()方法的默认行为是调用Thread()类中的target指定的函数
+             2.如果子类中自定义了__init__()方法，则要在子类__init__()方法中加上一条Thread.__init__(self)显式的执行，而这一条语句其实写法也不固定，可以只写Thread.__init__(self),此时由于父类中的__init__()方法都用的是默认值，而默认值中target=None,所以为了有意义，我们要override 父类的run()方法，在这个override的run()方法中自定义我们自己的逻辑; 另一种写法是Thread.__init__(self, target=func_name[,args=(),kwargs={}]),也就是初始化父类的时候给出target值，此时如果函数有参数的话还要看情况给定args参数或是kwargs参数,这种情况下，我们可以不用在子类中override run()方法，直接实例化子类，然后调用start()函数，因为默认的run()方法有一个有意义的target指定的函数可以执行，当然如果我们override run()函数也没问题，不过这么写就有点不伦不类了，你既然都指定了target了，再override run()的话，这个target的指定不就没有意义了嘛
+	     class a(Thread):
+	         def __init__(self):
+		     Thread.__init__(self, target=test, args=(8,9))
+             new = a()
+	     new.start()  //此时执行的是test()函数，输出的是"I am ok"
+
+	     class a(Thread):
+	         def __init__(self):
+		     Thread.__init__(self)
+		 def run(self):
+		     print("I am ok")
+             new = a()
+	     new.start()  //此时执行的是自定义的run()函数中的语句，即print(),输出"I am ok"
+**.关于使用threading模块中的Thread类新建线程的总结:
+    上面讲的其实挺乱的，但最终要说明的有两点:
+                  1.无论如何Thread类中的__init__()都要被执行，无论你采用什么方法;
+		  2.调用start()方法时，实际上是在新线程中执行run()方法. 如果你不想在子类中重写run()方法，则要在调用Thread类的__init__()方法时传入target值，如果你想重写run()方法，则执行Thread类的初始化方法时，只需写作Thread.__init__(self)即可
+**.有时间看看threading.py把内部实际的逻辑搞清楚
+----------------
+面象对象
+----------------
+**.这块的内容主要是看类一章的内容: https://docs.python.org/3/tutorial/classes.html?highlight=class
+主要说几点吧:
+    1.类中的方法或属性都加上self,这只是一个约定，这个self没有实际的意义，通过加日志打印，在threading模块的Thread.__init__()中，self输出的是线程信息
+    2.类在实例化的时候会自动执行__init__()方法，所以如果有什么初始化的操作可以在类中加上这个方法
+    3.看样子类中的__init__()方法就是类的构造器，所以可以在类实例化的时候传参，这些传入的参数值实际被传递给了__init__()方法中的形参
+    4.继承的声明为 class derived_class(base_class):
+    5.可以给类随时添加属性(点分形式)  //见Odds and Ends小节的例子
+    6.可以在类外定义函数，然后通过赋值的形式传给类中的变量，即类中的方法不是一定要声明在类中  // 见Random Remarks例子
+    7.另外这一节的Iterator以及generators, Generator Expressions都是很重要的内容
