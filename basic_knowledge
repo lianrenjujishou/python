@@ -26,7 +26,7 @@ basic types:
 	    c.elements locate in {} //same as dictionary
         initial ways:
 	    a.a = set()
-	    b.a = set('x', 'y')
+	    b.a = set(('x', 'y'))
     tuple:
         characteristic:
 	    a.elements are immutable
