@@ -27,6 +27,7 @@ basic types:
         initial ways:
 	    a.a = set()
 	    b.a = set(('x', 'y'))
+	    c.a = {'x'}
     tuple:
         characteristic:
 	    a.elements are immutable
