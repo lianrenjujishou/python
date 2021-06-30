@@ -253,7 +253,7 @@ string: //https://docs.python.org/3/library/stdtypes.html#string-methods
 		    def run(self):
 		        print("I am ok")
 	        new = a()
-		a.start()   //此时执行自定义run()方法下的print()函数，而Thread类中run()方法的默认行为是调用Thread()类中的target指定的函数
+		new.start()   //此时执行自定义run()方法下的print()函数，而Thread类中run()方法的默认行为是调用Thread()类中的target指定的函数
              2.如果子类中自定义了__init__()方法，则要在子类__init__()方法中加上一条Thread.__init__(self)显式的执行，而这一条语句其实写法也不固定，可以只写Thread.__init__(self),此时由于父类中的__init__()方法都用的是默认值，而默认值中target=None,所以为了有意义，我们要override 父类的run()方法，在这个override的run()方法中自定义我们自己的逻辑; 另一种写法是Thread.__init__(self, target=func_name[,args=(),kwargs={}]),也就是初始化父类的时候给出target值，此时如果函数有参数的话还要看情况给定args参数或是kwargs参数,这种情况下，我们可以不用在子类中override run()方法，直接实例化子类，然后调用start()函数，因为默认的run()方法有一个有意义的target指定的函数可以执行，当然如果我们override run()函数也没问题，不过这么写就有点不伦不类了，你既然都指定了target了，再override run()的话，这个target的指定不就没有意义了嘛
 	     class a(Thread):
 	         def __init__(self):
