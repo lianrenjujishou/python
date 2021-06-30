@@ -129,8 +129,8 @@ string: //https://docs.python.org/3/library/stdtypes.html#string-methods
     endswith(suffix[, start[, end]])
     expandtabs(tabsize=8)   //这个函数其实还是要好好想一下的，总结出来就一句话:"tab是从头开始数的，如果某个tab宽度大于位于该tab中的字符数时，使用空格对多余的这部分宽度进行填充"，也就是说理解的时候不要用"向字符串中插入tab"的思维去想，而是用"向tab中插字符，填不满补齐的思维去想".另外还以使用str.expandtabs().replace(" ", "1")这个语句去观察当前到底有几个空格(实际看到的是1，因为几个空格肉眼不好看，但是数1的个数还是很好数的)
     find(sub[, start[, end]])
-    format(*args, **kwargs)
-    format_map(mapping)
+    format(*args, **kwargs) //"{}{}".format(1,2)  "{}{}{x}".format(1,2,x=3)    https://docs.python.org/3/library/string.html?highlight=string#module-string
+    format_map(mapping)  //"{x}{y}".foramt(x=1,y=2)
     index(sub[, start[, end]])
     isalnum()
     isalpha()
@@ -180,44 +180,14 @@ string: //https://docs.python.org/3/library/stdtypes.html#string-methods
     zfill(width)  //指定字符串占的位宽，1.如果指定的width小于字符串的字符数，则没啥变化; 2.如果指定的width大于字符串的字符数，则返回的字符串中，多余的位宽字符使用数字0进行填充; *.特别要注意的是如果字符串有+或-号前缀，则补的0位于符号后，如"-42".zfill(5)  -> "-0042"
 ----------
 处理时间的方法: //https://www.cnblogs.com/lianrenjujishou/p/5456321.html
-datetime模块
- datetime类
-    属性: 年，月，日，时，分，秒，微秒，tzinfo  // help(datetime.datetime)
-    实例化: datetime.datetime(year,month,day,hour,minute,second,microsecond,tzinfo)
-    实例方法: today()
-              now(tz=None)
- date类:  //博客中的例子基本上将方法的用法都提到了
-    属性: 年，月，日
-    实例化: datetime.date(year, month, day)
-    实例方法:today(),
-             fromtimestamp(timestamp)   //time.time()返回的就是时间戳可作为函数参数
-             fromordinal(ordinal) //该函数参数是从1年1月1日起的天数，函数结果是一个年月日的日期，也就是说根据总天数算日期的这么一个函数
-             replace(year,month,day) //这个简单，修改年月日属性
-             timetuple()  //返回一个实例，实例中的属性很全，包含年，月，日，时，分，秒，星期几，当年第几天，是否是夏令时这九个属性
-             toordinal()  //这个是使用date调用得到从1年1月1日到该日期的天数，正好与fromordinal(ordinal)函数相反
-             weekday() //使用数字返回星期几，0-6
-             isoweekday() //使用数字返回星期几, 1-7
-             isocalendar() //返回一个三元组，iso年，iso一年中第几个星期，iso星期几
-             isoformat()  //将实例化的日期格式化为可读的字符串  // '2002-12-04'
-             __str__()  //参见isoformat()
-             ctime() // 返回一个字符串 "Thu May 9 13:39:24 2019"
-             strftime(format) //这个就是对日期的一个格式化，参数有很多
+ 日期时间常用操作:
+所用模块: datetime, time
+1.当前日期时间所有的参数都可通过指定不同的参数来获取: strftime(datetime.datetime.now(),"%Y-%m-%D %H:%M:%S")
 
- time类
-    属性: 小时，分钟， 秒，微秒，tzinfo  // help(datetime.time) ; 它的isoformat()与strftime()这两个函数应该常用
- timedelta类
-    *.使用微秒来表示两个date,time或是datetime实例的间隔
-    实例化:datetime.timedelta(weeks,days,hours,minutes,seconds,milliseconds,microseconds) //实例化后，系统只存储 days, hours, microseconds,实际给出的那么多单位都会向这三个单位进行转换
-    实例属性: days, hours, microseconds
-    实例方法: total_seconds()
- tzinfo类
- timezone类
-    实例化: datetime.timezone(offset[, name])
-    实例方法: utcoffset(dt)
-              tzname(dt)
-              dst(dt)
-              fromutc(dt)
- strftime()和strptime()
+2.计算指定间隔前或后的日期时间,日期,时间:datetime.datetime.now() +/- datetime.timedelta(hours=1),得到的对象再调用datetime.datetime.strftime(时间对象,"格式化参数")来得到自己想要的结果
+3.根据参数生成时期时间,日期,时间: datetime.datetime.strptime('2013-10-18 01:02:03',"格式化参数"),最后再调用datetime.datetime.strftime(时间对象,'格式化参数')得到想要的结果
+4.根据时间戳生成日期时间对象:datetime.datetime.fromtimestamp(time.time())
+
 ----------------
 文件读写
  读:
