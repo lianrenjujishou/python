@@ -288,3 +288,50 @@ string: //https://docs.python.org/3/library/stdtypes.html#string-methods
     5.可以给类随时添加属性(点分形式)  //见Odds and Ends小节的例子
     6.可以在类外定义函数，然后通过赋值的形式传给类中的变量，即类中的方法不是一定要声明在类中  // 见Random Remarks例子
     7.另外这一节的Iterator以及generators, Generator Expressions都是很重要的内容
+    
+-----2023-06-14对多线程的实际用法的理解与总结-----   
+   多线程简单来说其实主要注意的就是Thread类中的两个方法, 一个是__init__(), 一个是run(). 前者负责线程的所有细节问题, 后者包含我们要让线程运行的代码
+import threading
+
+def test(x,y):
+  print(threading.current_thread())
+  print(x*y)
+
+-----
+t1 = threading.Thread(target=test,args=(7,8))  //这种形式中, 在实例化的时候,自动调用Thread类中的__init__()方法, 然后用target和args参数传给Thread类中的run()方法
+t1.start()
+-----
+
+-----
+class newT(threading.Thread):   //这种方法其实和上面这种一样,只不过形式不同
+  def __init__(self):
+    Theading.Thread.__init(target=test,args=(7,8))
+
+new = newT()
+new.start()
+-----
+
+-----
+class newT(threading.Thread):  //这种形式在子类实例化的时候,因为子类中没有__init__()方法,所以自动去执行Thread类中的__init__()方法,和上两种情况不同的是你没给父类的__init__()方法传参, 因此此时Thread类中不会有任何的代码传给Thread类的run()方法,因此我们要在子类中重写run()方法,将新建线程要执行的语句放里面,而在用实例调用start()方法时,因为自定义的run()方法优先级高, 所以start()会自动调用子类中的这个run()方法
+  def run(self):
+    test(7,8)
+
+new = newT()
+new.start()
+-----
+
+-----
+class newT(threading.Thread):  //当子类中即有__init__()方法出现, 又有run()方法出现时, 一般是在实例化的时候传参,或者在__init__()中有一些固定的初始化操作, 否则如果__init__()的存在只为调用Thread类中的__init__()方法,则没有存在的必要,原因上面也说了.
+  def __init__(self,num):
+    threading.Thread.__init__(self)
+    //有其它初始化操作, 如self.l= [1,2,3], 否则已经重写了run()方法的情况下, 如果还重写了__init__()方法只是为了调用Thread类中的__init__()是没有意义的
+    self.howmany = num
+    self.name="固定值"     //这里的变量name其实放在这里不合适, 因为它是一个保留变量, 它是用来设定新建线程的线程名的, 假设你在被执行函数中有语句 print(threading.current_thread()),则会输出类似于 <newT(固定值, started 139939741169344)> 的内容
+
+  def run(self):
+    test(7,8)
+
+new = newT(666)
+new.start()
+-----
+
