@@ -184,8 +184,9 @@ string: //https://docs.python.org/3/library/stdtypes.html#string-methods
 所用模块: datetime, time
 1.当前日期时间所有的参数都可通过指定不同的参数来获取: datetime.<datetime|date>.strftime(datetime.datetime.now(),"%Y-%m-%d %H:%M:%S")
 
+//https://docs.python.org/3/library/datetime.html?highlight=strftime#strftime-strptime-behavior
 2.计算指定间隔前或后的日期时间,日期,时间:datetime.datetime.now() +/- datetime.timedelta(hours=1),得到的对象再调用datetime.datetime.strftime(时间对象,"格式化参数")来得到自己想要的结果
-3.根据参数生成时期时间,日期,时间: datetime.datetime.strptime('2013-10-18 01:02:03',"格式化参数"),最后再调用datetime.datetime.strftime(时间对象,'格式化参数')得到想要的结果
+3.根据参数生成日期时间对象: datetime.datetime.strptime('2013-10-18 01:02:03',"格式化参数"),拿到构建的对象后可和datetime.timedelta()函数进行加减运算拿到想要的日期时间,最后再调用datetime.datetime.strftime(时间对象,'格式化参数')拿到格式化后的字符串类型的结果
 4.根据时间戳生成日期时间对象:datetime.datetime.fromtimestamp(time.time())
 
 ----------------
