@@ -190,6 +190,7 @@ string: //https://docs.python.org/3/library/stdtypes.html#string-methods
 4.根据时间戳生成日期时间对象:datetime.datetime.fromtimestamp(time.time())
 
 ----------------
+//交互模式下输入help(open), 里面关于mode参数部分可以好好看一下, 有多种组合,不同组合对文件有不同影响;另外还要注意二进制模式b和文本模式t,总之好好读一下.
 文件读写
  读:
      f = open('file_name'[, encoding="utf8"], mode='r[b]')
