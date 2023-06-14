@@ -182,7 +182,7 @@ string: //https://docs.python.org/3/library/stdtypes.html#string-methods
 处理时间的方法: //https://www.cnblogs.com/lianrenjujishou/p/5456321.html
  日期时间常用操作:
 所用模块: datetime, time
-1.当前日期时间所有的参数都可通过指定不同的参数来获取: strftime(datetime.datetime.now(),"%Y-%m-%D %H:%M:%S")
+1.当前日期时间所有的参数都可通过指定不同的参数来获取: datetime.<datetime|date>.strftime(datetime.datetime.now(),"%Y-%m-%d %H:%M:%S")
 
 2.计算指定间隔前或后的日期时间,日期,时间:datetime.datetime.now() +/- datetime.timedelta(hours=1),得到的对象再调用datetime.datetime.strftime(时间对象,"格式化参数")来得到自己想要的结果
 3.根据参数生成时期时间,日期,时间: datetime.datetime.strptime('2013-10-18 01:02:03',"格式化参数"),最后再调用datetime.datetime.strftime(时间对象,'格式化参数')得到想要的结果
