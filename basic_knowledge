@@ -204,7 +204,7 @@ string: //https://docs.python.org/3/library/stdtypes.html#string-methods
 多线程 之 threading模块:
   利用threading模块创建多线程的两种方式:
        1.向Thread类传递一个可调用的参数
-       2.新建Thread类的子类，然后重写父类的__init__()方法与run()方法 //我记得子类实例化的时候应该会自动先对父类初始化吧，为什么要手动的在子类中实现父类的__init__()方法呢?
+       2.新建Thread类的子类，然后重写父类的__init__()方法与run()方法 //我记得子类实例化的时候应该会自动先对父类初始化吧，为什么要手动的在子类中实现父类的__init__()方法呢?应该是因为调用父类的__init__()方法是必须的行为, 而在子类中定义的__init__()中调用是实现方法.
   threading模块的top-level方法:
       active_count()  //返回的是当前存活线程的个数，即返回值是个数字，这个数字还等价于enumerate()函数返回的列表长度,即"active_count() == len(enumerate())"
       current_thread() //返回的是当前调用该函数的线程，这个线程名称可以在enumerate()函数返回的列表中找到
@@ -222,6 +222,7 @@ string: //https://docs.python.org/3/library/stdtypes.html#string-methods
       Thread类构造器参数: group, target, name, args, kwargs, daemon
       实例方法和属性:
           start()  //它最常用，作用是在新的控制线程中执行run()方法,当前的理解是:也就是说所有的业务代码应该都放在run()函数中; 另外一个线程只能调用一次start()方法，如果多次调用会抛RuntimeError异常
+	    *.既然无论是调start()还是run(),最终调的都是run(),那为什么大家都是调start()呢? 原因是调start()后会新建线程, 然后在新建程中执行run()中的代码; 而直接调run()的话,是在当前线程执行代码
 	  run()  //看意思是run()函数运行的时候，执行的是Thread类实例化时指定的类参数target的值，该值猜测应该通常是个函数；然后还会读取Thread类实例化时指定的类参数args以及kwargs对target函数进行传参
 	  join(timeout=None)  //执行方方法的线程会被阻塞，直到相应线程被终止或是timeout超时
 	  name
@@ -247,7 +248,7 @@ string: //https://docs.python.org/3/library/stdtypes.html#string-methods
 	t = threading.Thread(target=test, args=(5, 6))
 	t.start()
 	*.可以在test函数中加上一句print(threading.current_thread())就可以看到执行线程名并不是main线程，而是新建线程
-	b.使用子类继承Thread类的方式，此时需要注意的问题是: "子类继承父类时，在对子类实例化的时候，并不会默认执行父类的__init__()函数，而有些时候父类的部分操作依赖于父类中的__init__()函数进行一些初始化操作，如果没有这些初始化操作，子类在调用父类的某些函数时可能会出问题"; 还有一个问题: "使用子类时，如果在子类中找不到的内容会在其先辈中一级一级的找，直到找到为止，有一个关键点是:类在实例化的时候会调用__init__()方法". 接下来引入b这个方法:
+	b.使用子类继承Thread类的方式，此时需要注意的问题是: "子类继承父类时，在对子类实例化的时候，并不会默认执行父类的__init__()函数，而有些时候父类的部分操作依赖于父类中的__init__()函数进行一些初始化操作，如果没有这些初始化操作，子类在调用父类的某些函数时可能会出问题"; 还有一个问题: "使用子类时，如果在子类中找不到的内容会在其先辈中一级一级的找，直到找到为止，有一个用__init__()方法". 接下来引入b这个方法:
 	    1.如果在子类中没有定义__init__()函数的情况下, 我们可以直接重写run方法，则此时多线程运行的就是override后的这个run()方法中的语句; 要说的重点是因为子类中没有定义__init__()方法，所以在子类实例化时，因为在子类中找不到__init__()方法，它就会去父类中找，从而将Thread类的__init__()方法执行了，继而子类中再引用父类中的其它方法时都不会有问题;
 	        def test(x,y):
 		    print("%d"%(x+y))
@@ -264,7 +265,7 @@ string: //https://docs.python.org/3/library/stdtypes.html#string-methods
 	     new.start()  //此时执行的是test()函数，输出的是"I am ok"
 
 	     class a(Thread):
-	         def __init__(self):
+	         def __init__(self):         //子类要是重写了__init__()方法,就一定要调用父类的__init__()方法, 因为父类的__init__()方法做了很多操作, 如果子类没有重写__init__方法,则不必显式的调用父类的__init__(),因为由于继承机制的存在, 在实例化的时候,检测到子类中没有__init__()方法,自己就会跑去父类找了. 而run()方法是否重写看你要怎么实现了,有两种情况, 一是你已经通过上面这个子类中重定__init__()方法这种, 直接在调用父类的__init__()方法时把线程要执行的函数,参数啥的都传过去, 传过去后应该是这些参数会自动的传给父类中的run()方法,因此虽然说你实例调的是start(),而start()调的是run(),而此时你虽然没有在子类重写run()方法的情况下,但在start()后,函数也是正确的被新线程执行了,这就印证了父类的__init__()会处理父类中的run()方法这个观点. 另外一种情况是子类中只重写run()方法就够了,将新建线程要执行的内容放到run()方法中.也就是说其实这个例子中子类中定义的def __init__()方法其实根本没必要存在, 因为这个子类定义的__init__()方法仅仅是对父类的__init__()做了初始化, 而这一步实际上既使你不做,在下面new = a()进行实例化的时候也会自动做的. 现在想来, 其实新建线程啥的所有细节都是Thread类的__init__()方法做的, 而子类仅仅是可以自己自定义一些像run()这样的方法,只不过是在实例调start()方法时这些自定义的方法有优先执行权罢了.
 		     Thread.__init__(self)
 		 def run(self):
 		     print("I am ok")
