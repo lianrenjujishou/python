@@ -3,6 +3,7 @@ non-primitive types:
         characteristic: 
 	    a.elements are mutable
 	    b.elements locate in []
+            c.elements may be different types
         initial ways:
 	    a.a = []
 	    b.a = list()
