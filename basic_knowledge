@@ -20,6 +20,7 @@ non-primitive types:
 	    a.a = dict()
 	    b.a = {}
 	    c.a = {'x':'y', 'p':'q'}
+            *.初始化字典的四种方法:https://www.cnblogs.com/lianrenjujishou/p/18349317
     set:
         characteristic:
 	    a.unordered
