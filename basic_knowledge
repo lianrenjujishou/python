@@ -1,4 +1,4 @@
-basic types:
+non-primitive types:
     list:
         characteristic: 
 	    a.elements are mutable
