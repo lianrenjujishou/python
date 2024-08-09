@@ -67,6 +67,7 @@ dictionary:  //https://docs.python.org/3/library/stdtypes.html#dict
     iter(d)
     clear()
     copy()
+      *.浅拷贝,b=a.copy(),行为:新建对象b,并将a对象中的数据原样拷贝一份存到b中; 此时id(a)!=id(b),所以理论上来说你修改a或b并不会影响对方,并且简单的测试,如a=[1,2,3]这种确实是这样的,浅拷贝的重点在哪中呢?在于元素中含有non-primitive类型时,如a=[1,2,[3,4]],此时a[2]又是一个non-primitive对象,此时[3,4]实际是在另一个地方新建的对象,而a[2]是对该对象的一个引用,而copy()方法简单来说它拷贝过去的a[2]也是一个引用,那既然是引用,则修改a[2]或b[2]世必会影响对方.点儿在这! 而深拷贝则会考虑到元素类型为non-primitve的情况,碰到之后,会重新建立对象,然后将non-primitive类型元素数据拷贝到新地方, 然后将新的引用赋给b[2].而深拷贝一般要引入copy拷块,然后执行copy.deepcopy(),浅拷贝即可直接用copy()方法,也可调copy模块的copy(). 另外还有一点要注意的 b = a这种实际上这两个变量引用的是同一个位置的数据,可以验证id(a)和id(b)
     get(key[, default])
     items()
     keys()
