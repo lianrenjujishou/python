@@ -75,6 +75,7 @@ dictionary:  //https://docs.python.org/3/library/stdtypes.html#dict
     popitem()
     setdefault(key[, default])
     update([other])
+      *.other除了可以是另一个dictionary外, 还可以是任何的元素值长度为2的可迭代对象,如[('one',1),('two',2)], [['one',]),['two',2]], ['o1','t2']. 其实主要是为了满足help(d.update)中"If E is present and lacks a .keys() method, then does:  for k, v in E: D[k] = v", 即你提供的这个对象的元素必须是能解包为两个值,k和v.
     values()
    *Dictionary view objects
 set:
