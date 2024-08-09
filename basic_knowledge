@@ -54,6 +54,7 @@ list: //https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequen
     index(x[, start[, end]])
     count(x)
     sort(key=None, reverse=False)  //this method use built-in sorted() method infact. the usage of argument key reference example of url: https://www.geeksforgeeks.org/sorted-function-python/
+      *.sort是利用内建的sorted()函数进行排序的, 默认是升序(ascending),可以使用内建的len函数作为key值进行测试,是一个不错的选择
     reverse()
     copy()
 dictionary:  //https://docs.python.org/3/library/stdtypes.html#dict
