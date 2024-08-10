@@ -112,6 +112,7 @@ set:
     remove(elem)
     discard(elem)
     pop()
+      *.从测试来看,它的行为和文档中描述的不同,文档中说的是删除集合中任一元素,并将删除的元素作为返回值.实测下来,它删的时候不是随机删的,而是遵循FIFO的规则,大多数对象pop()的行为都是LIFO这一点还是需要注意的.
     clear()
 tuple:  //https://docs.python.org/3/library/stdtypes.html#typesseq-common
         //tuple implemtns Common Sequence Operations all operation, Common Sequence Types are list, tuple, range.
