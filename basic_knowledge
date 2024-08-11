@@ -138,7 +138,7 @@ string: //https://docs.python.org/3/library/stdtypes.html#string-methods
     expandtabs(tabsize=8)   //这个函数其实还是要好好想一下的，总结出来就一句话:"tab是从头开始数的，如果某个tab宽度大于位于该tab中的字符数时，使用空格对多余的这部分宽度进行填充"，也就是说理解的时候不要用"向字符串中插入tab"的思维去想，而是用"向tab中插字符，填不满补齐的思维去想".另外还以使用str.expandtabs().replace(" ", "1")这个语句去观察当前到底有几个空格(实际看到的是1，因为几个空格肉眼不好看，但是数1的个数还是很好数的)
     find(sub[, start[, end]])
     format(*args, **kwargs) //"{}{}".format(1,2)  "{}{}{x}".format(1,2,x=3)    https://docs.python.org/3/library/string.html?highlight=string#module-string
-    format_map(mapping)  //"{x}{y}".foramt(x=1,y=2)
+    format_map(mapping)  //"{x}{y}".foramt(x=1,y=2)           //mapping type: https://docs.python.org/3/library/stdtypes.html#mapping-types-dict
     index(sub[, start[, end]])
     isalnum()
     isalpha()
